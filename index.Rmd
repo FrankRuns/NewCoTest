@@ -1,18 +1,15 @@
-#' ---
-#' title: "index"
-#' author: "fcorrigan"
-#' date: "7/13/2020"
-#' output: html_document
-#' ---
+---
+output: html_document
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(fig.width=12, fig.height=8) 
+knitr::opts_chunk$set(fig.width=10, fig.height=6) 
 ```
 
-## US County Performance Index 
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
-You can also embed plots, for example:
+## US County Performance Index 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(rjson)
