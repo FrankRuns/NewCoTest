@@ -6,25 +6,70 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
+## US County Performance Index 
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
+library(rjson)
+library(plotly)
+
+url <- 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
+counties <- rjson::fromJSON(file=url)
+url2<- "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv"
+df <- read.csv(url2, colClasses=c(fips="character"))
+fig <- plot_ly() 
+fig <- fig %>% add_trace(
+    type="choroplethmapbox",
+    geojson=counties,
+    locations=df$fips,
+    z=df$unemp,
+    colorscale="Viridis",
+    zmin=0,
+    zmax=12,
+    marker=list(line=list(
+      width=0),
+      opacity=0.5
+    )
+  )
+fig <- fig %>% layout(
+    mapbox=list(
+      style="carto-positron",
+      zoom =2,
+      center=list(lon= -95.71, lat=37.09))
+  )
+fig
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Global Performance Index 
+
+```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
+df <- read.csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
+
+# light grey boundaries
+l <- list(color = toRGB("grey"), width = 0.5)
+
+# specify map projection/options
+g <- list(
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  projection = list(type = 'Mercator')
+)
+
+fig <- plot_geo(df)
+fig <- fig %>% add_trace(
+    z = ~GDP..BILLIONS., color = ~GDP..BILLIONS., colors = 'Blues',
+    text = ~COUNTRY, locations = ~CODE, marker = list(line = l)
+  )
+fig <- fig %>% colorbar(title = 'GDP Billions US$', tickprefix = '$')
+fig <- fig %>% layout(
+    title = '2014 Global GDP<br>Source:<a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">CIA World Factbook</a>',
+    geo = g
+  )
+
+fig
+```
+
