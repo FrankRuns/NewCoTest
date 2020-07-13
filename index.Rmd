@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(rjson)
 library(plotly)
 
